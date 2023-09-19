@@ -1,0 +1,120 @@
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>App Pesquisa código postal</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <script>
+      function requestCode(postalCode) {
+        let url = "https://json.geoapi.pt/codigo_postal/" + postalCode;
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            let dadosJsonText = xhr.responseText;
+            let dadosJsonObj = JSON.parse(dadosJsonText);
+
+            let distrito = dadosJsonObj.Distrito;
+            let concelho = dadosJsonObj.Concelho;
+            let localidade = dadosJsonObj.Localidade;
+            let rua = dadosJsonObj.ruas;
+            // vai buscar os inputs
+            document.getElementById("district").setAttribute("value", distrito);
+            document.getElementById("concelho").setAttribute("value", concelho);
+            document
+              .getElementById("localidade")
+              .setAttribute("value", localidade);
+            document.getElementById("ruas").setAttribute("value", rua);
+          } else {
+            // Verify if the input boxes are empty
+            let distritoInput = document.getElementById("district");
+            let concelhoInput = document.getElementById("concelho");
+            let localidadeInput = document.getElementById("localidade");
+            let ruaInput = document.getElementById("ruas");
+
+            if (distritoInput && concelhoInput && localidadeInput && ruaInput) {
+              let distrito = distritoInput.value;
+              let concelho = concelhoInput.value;
+              let localidade = localidadeInput.value;
+              let rua = ruaInput.value;
+              distritoInput.setAttribute('value' , '');
+              concelhoInput.setAttribute('value' , '');
+              localidadeInput.setAttribute('value' , '');
+              ruaInput.setAttribute('value' , '');
+            }
+          }
+        };
+
+        xhr.send();
+      }
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light mb-4">
+      <div class="container">
+        <div class="navbar-brand mb-0 h1">
+          <h3>App Pesquisa código postal</h3>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row form-group">
+        <div class="col-sm-3">
+          <input
+            type="text"
+            class="form-control"
+            onblur="requestCode(this.value)"
+            placeholder="Código postal"
+          />
+        </div>
+        <div class="col-sm-9">
+          <input
+            type="text"
+            id="district"
+            class="form-control"
+            placeholder="Distrito"
+            readonly
+          />
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-sm-4">
+          <input
+            type="text"
+            id="concelho"
+            class="form-control"
+            placeholder="Concelho"
+            readonly
+          />
+        </div>
+        <div class="col-sm-3">
+          <input
+            type="text"
+            id="localidade"
+            class="form-control"
+            placeholder="Localidade"
+            readonly
+          />
+        </div>
+
+        <div class="col-sm-5">
+          <input
+            type="text"
+            class="form-control"
+            id="ruas"
+            placeholder="ruas"
+            readonly
+          />
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
